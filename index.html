@@ -8,33 +8,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Petits raffinements globaux, aucune couleur modifiée */
         body { font-feature-settings: "kern"; -webkit-font-smoothing: antialiased; }
-        .arabic { font-family: "Traditional Arabic", "Scheherazade New", serif; line-height: 2.1; }
+        .arabic { font-family: "Traditional Arabic", "Scheherazade New", serif; line-height: 2.1; font-size: 1.125rem; }
+        body.text-size-small .arabic { font-size: 1rem; }
+        body.text-size-medium .arabic { font-size: 1.125rem; }
+        body.text-size-large .arabic { font-size: 1.375rem; }
         .card-tap { transition: transform .15s ease, background-color .2s ease, box-shadow .2s ease; }
         .card-tap:active { transform: scale(0.98); }
         .soft-shadow { box-shadow: 0 6px 20px -8px rgba(14,32,64,0.25); }
         .soft-shadow-lg { box-shadow: 0 10px 30px -10px rgba(14,32,64,0.35); }
+        .favBtn { cursor: pointer; }
+        .tailleBtn.active { background-color: rgb(30 58 138); color: white; }
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; animation: none !important; }
         }
     </style>
 </head>
-<body class="bg-white cursor-pointer">
+<body class="bg-white cursor-pointer text-size-medium">
 
     <!-- ============ SPLASH ============ -->
     <main class="min-h-screen flex flex-col items-center justify-center px-6" id="page1">
         <div class="w-full max-w-xs rounded-3xl overflow-hidden soft-shadow-lg">
             <img src="img/mosque3.webp" alt="Mosquée" class="w-full h-56 object-cover">
         </div>
-
         <div class="text-center mt-8">
             <h1 class="text-blue-700 font-extrabold text-3xl tracking-tight">ADHKAR</h1>
             <p class="text-gray-500 mt-2 max-w-[26ch] mx-auto">
                 Les rappels quotidiens qui illuminent ta journée
             </p>
         </div>
-
         <div class="mt-10 w-48">
             <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
                 <div class="w-1/2 bg-blue-700 h-2 rounded-full"></div>
@@ -50,10 +52,10 @@
             <div class="p-6">
                 <h2 class="text-blue-700 font-bold text-2xl">ADHKAR</h2>
                 <nav class="mt-10 flex flex-col gap-5 text-gray-700">
-                    <p class="flex items-center gap-3"><span>🏠</span> Accueil</p>
-                    <p class="flex items-center gap-3"><span>❤️</span> Favoris</p>
-                    <p class="flex items-center gap-3"><span>🔍</span> Recherche</p>
-                    <p class="flex items-center gap-3"><span>⚙️</span> Paramètres</p>
+                    <p class="flex items-center gap-3" id="menuAccueil"><span>🏠</span> Accueil</p>
+                    <p class="flex items-center gap-3" id="menuFavoris"><span>❤️</span> Favoris</p>
+                    <p class="flex items-center gap-3" id="menuRecherche"><span>🔍</span> Recherche</p>
+                    <p class="flex items-center gap-3" id="menuParametres"><span>⚙️</span> Paramètres</p>
                 </nav>
             </div>
         </div>
@@ -90,7 +92,7 @@
                 </div>
                 <div class="card-tap p-4 bg-gray-100 hover:bg-blue-300 rounded-2xl flex flex-col justify-between h-24" id="nuit">
                     <i class="fa-solid fa-bed text-blue-700 text-2xl"></i>
-                    <h3 class="font-bold text-sm"  >Avant de dormir</h3>
+                    <h3 class="font-bold text-sm">Avant de dormir</h3>
                 </div>
             </div>
 
@@ -102,19 +104,19 @@
 
         <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-gray-100 rounded-t-2xl px-4 py-3">
             <div class="flex justify-around text-center">
-                <div>
+                <div id="navAccueil">
                     <i class="fa-solid fa-house" style="color: rgb(14, 32, 64);"></i>
                     <p class="text-xs mt-1">Accueil</p>
                 </div>
-                <div>
+                <div id="navFavoris">
                     <i class="fa-regular fa-heart" style="color: rgb(14, 32, 64);"></i>
                     <p class="text-xs mt-1">Favoris</p>
                 </div>
-                <div>
+                <div id="navRecherche">
                     <i class="fa-solid fa-magnifying-glass" style="color: rgb(14, 32, 64);"></i>
                     <p class="text-xs mt-1">Recherche</p>
                 </div>
-                <div>
+                <div id="navParametres">
                     <i class="fa-solid fa-gear" style="color: rgb(14, 32, 64);"></i>
                     <p class="text-xs mt-1">Paramètres</p>
                 </div>
@@ -129,329 +131,48 @@
             <h2 class="text-2xl font-bold text-blue-900">Adhkar du matin</h2>
             <i class="fa-solid fa-arrows-up-down-left-right text-blue-900 text-lg" style="color: rgb(14, 32, 64);"></i>
         </div>
-
-        <div class="px-5 mt-6 flex flex-col gap-4">
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">رَضِيتُ بِاللَّهِ رَبًّا، وَبِالإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">J'agrée Allah comme Seigneur, l'Islam comme religion et Muhammad ﷺ comme Prophète.</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">سُبْحَانَ اللهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Gloire et louange à Allah du nombre de Ses créatures, de Sa propre Satisfaction, de la lourdeur de Son Trône et du nombre de Ses Paroles.</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">بِسْمِ اللهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَ لاَ فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Au nom d'Allah, tel qu'en compagnie de Son Nom rien sur Terre ni au ciel ne peut nuire, Lui l'Audient, l'Omniscient.</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَعُوذُ بِكلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Je me mets sous la protection des paroles parfaites d'Allah contre le mal qu'Il a créé.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللهُ لاَ إِلَهَ إِلاَّ هُوَ الحَيُّ القَيُّومُ لاَ تَأْخُذُهُ سِنَةٌ وَ لاَ نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَ مَا فِي الأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَ مَا خَلْفَهُمْ وَ لاَ يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَ الأَرْضَ وَ لاَ يَئُودُهُ حِفْظُهُمَا وَ هُوَ العَلَيُّ العَظِيمُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Allah ! Point de divinité à part Lui, le Vivant, Celui qui n’a besoin de rien et dont toute chose dépend « al-Qayyûm ». Ni somnolence ni sommeil ne Le saisissent. À Lui appartient tout ce qui est dans les cieux et sur la Terre. Qui peut intercéder auprès de Lui sans Sa permission ? Il connaît leur passé et leur futur. Et, de Sa science, ils n’embrassent que ce qu’Il veut. Son Kursî (Piédestal) déborde les cieux et la Terre et leur garde ne Lui coûte aucune peine. Et Il est le Très Haut, l’Immense.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ هُوَ اللهُ أَحَدٌ ۞ اللهُ الصَّمَدُ ۞ لَمْ يَلِدْ وَلَمْ يُولَدْ ۞ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Il est Allah, Unique ۞ Allah Le Seul à être imploré pour ce que nous désirons ۞ Il n’a jamais engendré et n’a pas été engendré non plus ۞ Et nul n’est égal à Lui. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ مِنْ شَرِّ مَا خَلَقَ ۞ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۞ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۞ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Je cherche protection auprès du Seigneur de l’aube naissante ۞ contre le mal des êtres qu’Il a créés ۞ contre le mal de l’obscurité quand elle s’approfondit ۞ contre le mal de celles qui soufflent (les sorcières) sur les nœuds ۞ et contre le mal de l’envieux quand il envie. » </p>
-            </div>
-             <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۞ مَلِكِ النَّاسِ ۞ إِلَهِ النَّاسِ ۞ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۞ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۞ مِنَ الْجِنَّةِ وَالنَّاسِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Je cherche protection auprès du Seigneur des hommes ۞ Le Souverain des hommes ۞ Dieu des hommes ۞ contre le mal du mauvais conseiller, furtif ۞ qui souffle le mal dans les poitrines des hommes ۞ qu’il (le conseiller) soit un djinn, ou un être humain. » </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ بِكَ أَصْبَحْنَا وَ بِكَ أَمْسَيْنَا، وَ بِكَ نَحْيَا وَ بِكَ نَمُوتُ وَ إِلَيْكَ النُّشُورُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">« Ô Allah ! C’est par Toi que nous nous retrouvons au matin et c’est par Toi que nous nous retrouvons au soir. C’est par Toi que nous vivons et c’est par Toi que nous mourons et c’est vers Toi que se fera la Résurrection. » </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَ أَنَا عَبْدُكَ، وَ أَنَا عَلَى عَهْدِكَ وَ وَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَ َأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">« Ô Allah ! Tu es mon Seigneur. Il n’y a aucune divinité [digne d’être adorée] en dehors de Toi. Tu m’as créé et je suis Ton serviteur, je me conforme autant que je peux à mon engagement et à ma promesse vis-à-vis de Toi. Je cherche refuge auprès de Toi contre le mal que j’ai commis. Je reconnais Ton bienfait à mon égard et je reconnais mon péché. Pardonne-moi donc, en effet nul autre que Toi ne pardonnes les péchés. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَصْبَحْنَا وَ أَصْبَحَ المُلْكُ للهِ وَ الحَمْدُ للهِ ، لاَ إلَهَ إلاَّ اللهُ وَحدَهُ لاَشَرِيكَ لَهُ، لَهُ المُلْكُ وَ لَهُ الحَمْدُ، وَ هُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا اليَوْمِ وَ خَيْرَ مَا بَعْدَهُ، وَ أَعُوذُ بِكَ مِنْ شَرِّ هَذَا اليَوْمِ وَ شَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الكَسَلِ وَ سُوءِ الكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَ عَذَابٍ فِي القَبْرِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">« Nous voilà au matin et le règne appartient à Allah. Louange à Allah, Il n’y a aucune divinité [digne d’être adorée] en dehors d’Allah, Seul, sans associé. À Lui la royauté, à Lui la louange et Il est capable de toute chose. Seigneur ! Je Te demande le bien que contient ce jour et le bien qui vient après. Et je cherche refuge auprès de Toi contre le mal que contient ce jour et le mal qui vient après. Seigneur ! Je cherche refuge auprès de Toi contre la paresse et les maux de la vieillesse. Je cherche refuge auprès de Toi contre le châtiment de l’Enfer et contre les tourments de la tombe. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ إِنِّي أَسْأَلُكَ العَافِيةَ فِي الدُّنْيَا وَ الآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ العَفْوَ وَ العَافِيةَ فِي دِينِي وَ دُنْيَايَ وَ أَهْلِي وَ مَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَ آمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَ مِنْ خَلْفِي وَ عَنْ يَمِينِي وَ عَنْ شِمَالِي، وَ مِنْ فَوْقِي، وَ أَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! Je te demande le salut dans cette vie et dans l’au-delà. Ô Allah ! Je Te demande le pardon et le salut dans ma religion, ma vie, ma famille et mes biens. Ô Allah ! Cache mes défauts et mets-moi à l’abri de toutes mes craintes. Ô Allah ! Protège-moi par devant, par derrière, sur ma droite, sur ma gauche et au-dessus de moi. Je me mets sous la protection de Ta grandeur pour ne pas être enseveli.</p>
-            </div>
-              <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الكُفْرِ، وَ الفَقْرِ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! Préserve mon corps. Ô Allah ! Préserve mon ouïe. Ô Allah ! Préserve ma vue. Il n’y a aucune divinité [digne d’être adorée] en dehors de Toi. Ô Allah ! Je cherche refuge auprès de Toi contre la mécréance et la pauvreté. Je me mets sous Ta protection contre les tourments de la tombe. Il n’y a aucune divinité [digne d’être adorée] en dehors de Toi. </p>
-            </div>
-             <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ عَالِمَ الغَيْبِ وَ الشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَ الأَرْضِ رَبَّ كُلِّ شَيْءٍ وَ مَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَ مِنْ شَرِّ الشَّيْطَانِ وَ شِرْكِهِ، وَ أَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! Connaisseur de l’invisible et de l’apparent, Créateur des cieux et de la Terre, Seigneur et Possesseur de toute chose, j’atteste qu’il n’y a aucune divinité [digne d’être adorée] en dehors de Toi, je cherche refuge auprès de Toi contre le mal de mon âme, contre le mal de Satan et de son polythéisme et contre le fait de me faire du mal à moi-même ou d’en faire à un musulman </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَصْبَحْنَا عَلَى فِطْرَةِ الإِسْلاَمِ، وَ عَلَى كَلِمَةِ الإِخْلاَصِ، وَ عَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ وَ عَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفاً مُسْلِماً وَ مَا كَانَ مِنَ المُشْرِكِينَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">  Nous voici au matin, en conformité avec la saine disposition qu’est l’Islam, avec la parole du monothéisme, avec la religion de notre Prophète Mohammed et sur la voie de notre père Ibrâhîm qui vouait un culte exclusif à Allah, soumis à Lui, et n’était point du nombre des polythéistes</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">سُبْحَانَ اللهِ وَ بِحَمْدِهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">100x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Gloire, pureté et louange à Allah.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">لاَ إِلَهَ إِلاَّ اللهُ، وَحْدَهُ لاَشَرِيكَ لَهُ، لَهُ المُلْكُ وَ لَهُ الحَمْدُ وَ هُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">100x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Il n’y a aucune divinité [digne d’être adorée] en dehors d’Allah, Seul, sans associé. À Lui la royauté, à Lui la louange, et Il est capable de toute chose </p>
-            </div>
-             <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَسْتَغْفِرُ اللَّهَ الْعَظيمَ الَّذِي لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ القَيّوُمُ وَأَتُوبُ إِلَيهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Je demande pardon à Allah, le Très Grand, Celui en dehors duquel il n’y a aucune divinité digne d’être adorée, Le Vivant, Celui qui subsiste par Lui-même, et je me repens à Lui. </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">100x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Je demande pardon à Allah et je me repens à Lui. </p>
-            </div>
-        </div>
-
+        <div class="px-5 mt-6 flex flex-col gap-4" id="listeMatin"></div>
         <div class="fixed bottom-6 left-0 right-0 flex justify-center">
-            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m1">
-                Commencer
-            </div>
+            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m1">Commencer</div>
         </div>
     </main>
-   
- <!-- ============ ADHKAR DU SOIR ============ -->
+
+    <!-- ============ ADHKAR DU SOIR ============ -->
     <main id="adhkarssoir" class="hidden max-w-md mx-auto pb-28">
         <div class="flex items-center justify-between px-5 pt-6">
             <i class="fa-solid fa-angles-left text-xl" style="color: rgb(14, 32, 64);" id="retour2"></i>
             <h2 class="text-2xl font-bold text-blue-900">Adhkar du soir</h2>
             <i class="fa-solid fa-arrows-up-down-left-right text-blue-900 text-lg" style="color: rgb(14, 32, 64);"></i>
         </div>
-
-        <div class="px-5 mt-6 flex flex-col gap-4">
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">رَضِيتُ بِاللَّهِ رَبًّا، وَبِالإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">J'agrée Allah comme Seigneur, l'Islam comme religion et Muhammad ﷺ comme Prophète.</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">سُبْحَانَ اللهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Gloire et louange à Allah du nombre de Ses créatures, de Sa propre Satisfaction, de la lourdeur de Son Trône et du nombre de Ses Paroles.</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">بِسْمِ اللهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَ لاَ فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Au nom d'Allah, tel qu'en compagnie de Son Nom rien sur Terre ni au ciel ne peut nuire, Lui l'Audient, l'Omniscient.</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَعُوذُ بِكلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Je me mets sous la protection des paroles parfaites d'Allah contre le mal qu'Il a créé.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللهُ لاَ إِلَهَ إِلاَّ هُوَ الحَيُّ القَيُّومُ لاَ تَأْخُذُهُ سِنَةٌ وَ لاَ نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَ مَا فِي الأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَ مَا خَلْفَهُمْ وَ لاَ يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَ الأَرْضَ وَ لاَ يَئُودُهُ حِفْظُهُمَا وَ هُوَ العَلَيُّ العَظِيمُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Allah ! Point de divinité à part Lui, le Vivant, Celui qui n’a besoin de rien et dont toute chose dépend « al-Qayyûm ». Ni somnolence ni sommeil ne Le saisissent. À Lui appartient tout ce qui est dans les cieux et sur la Terre. Qui peut intercéder auprès de Lui sans Sa permission ? Il connaît leur passé et leur futur. Et, de Sa science, ils n’embrassent que ce qu’Il veut. Son Kursî (Piédestal) déborde les cieux et la Terre et leur garde ne Lui coûte aucune peine. Et Il est le Très Haut, l’Immense.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ هُوَ اللهُ أَحَدٌ ۞ اللهُ الصَّمَدُ ۞ لَمْ يَلِدْ وَلَمْ يُولَدْ ۞ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Il est Allah, Unique ۞ Allah Le Seul à être imploré pour ce que nous désirons ۞ Il n’a jamais engendré et n’a pas été engendré non plus ۞ Et nul n’est égal à Lui. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ مِنْ شَرِّ مَا خَلَقَ ۞ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۞ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۞ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Je cherche protection auprès du Seigneur de l’aube naissante ۞ contre le mal des êtres qu’Il a créés ۞ contre le mal de l’obscurité quand elle s’approfondit ۞ contre le mal de celles qui soufflent (les sorcières) sur les nœuds ۞ et contre le mal de l’envieux quand il envie. » </p>
-            </div>
-             <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۞ مَلِكِ النَّاسِ ۞ إِلَهِ النَّاسِ ۞ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۞ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۞ مِنَ الْجِنَّةِ وَالنَّاسِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Je cherche protection auprès du Seigneur des hommes ۞ Le Souverain des hommes ۞ Dieu des hommes ۞ contre le mal du mauvais conseiller, furtif ۞ qui souffle le mal dans les poitrines des hommes ۞ qu’il (le conseiller) soit un djinn, ou un être humain. » </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ بِكَ أَمْسَيْنَا، وَ بِكَ أَصْبَحْنَا، وَ بِكَ نَحْيَا، وَ بِكَ نَمُوتُ وَ إِلَيْكَ المَصِيرُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! C’est par Toi que nous nous retrouvons au soir et c’est par Toi que nous nous retrouvons au matin. C’est par Toi que nous vivons et c’est par Toi que nous mourons et c’est vers Toi que sera notre destinée</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَ أَنَا عَبْدُكَ، وَ أَنَا عَلَى عَهْدِكَ وَ وَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَ َأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">« Ô Allah ! Tu es mon Seigneur. Il n’y a aucune divinité [digne d’être adorée] en dehors de Toi. Tu m’as créé et je suis Ton serviteur, je me conforme autant que je peux à mon engagement et à ma promesse vis-à-vis de Toi. Je cherche refuge auprès de Toi contre le mal que j’ai commis. Je reconnais Ton bienfait à mon égard et je reconnais mon péché. Pardonne-moi donc, en effet nul autre que Toi ne pardonnes les péchés. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَمْسَيْنَا وَ أَمْسَى المُلْكُ للهِ وَ الحَمْدُ للهِ، لاَ إِلَهَ إِلاَّ اللهُ وَحدَهُ لاَشَرِيكَ لَهُ، لَهُ المُلْكُ وَ لَهُ الحَمْدُ، وَ هُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيلَةِ وَ خَيرَ مَا بَعْدَهَا، وَ أَعُوذُ بِكَ مِنْ شَرِّ هَذِهِ اللَّيلَةِ وَ شَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الكَسَلِ وَ سُوءِ الكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَ عَذَابٍ فِي القَبْرِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Nous voilà au soir et le règne appartient à Allah. Louange à Allah, Il n’y a aucune divinité [digne d’être adorée] en dehors d’Allah, Seul, sans associé. À Lui la royauté, à Lui la louange et Il est capable de toute chose. Seigneur ! Je Te demande le bien que contient cette nuit et le bien qui vient après. Et je cherche refuge auprès de Toi contre le mal que contient cette nuit et le mal qui vient après. Seigneur ! Je cherche refuge auprès de Toi contre la paresse et les maux de la vieillesse. Je cherche refuge auprès de Toi contre le châtiment de l’Enfer et contre les tourments de la tombe</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ إِنِّي أَسْأَلُكَ العَافِيةَ فِي الدُّنْيَا وَ الآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ العَفْوَ وَ العَافِيةَ فِي دِينِي وَ دُنْيَايَ وَ أَهْلِي وَ مَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَ آمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَ مِنْ خَلْفِي وَ عَنْ يَمِينِي وَ عَنْ شِمَالِي، وَ مِنْ فَوْقِي، وَ أَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! Je te demande le salut dans cette vie et dans l’au-delà. Ô Allah ! Je Te demande le pardon et le salut dans ma religion, ma vie, ma famille et mes biens. Ô Allah ! Cache mes défauts et mets-moi à l’abri de toutes mes craintes. Ô Allah ! Protège-moi par devant, par derrière, sur ma droite, sur ma gauche et au-dessus de moi. Je me mets sous la protection de Ta grandeur pour ne pas être enseveli.</p>
-            </div>
-              <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الكُفْرِ، وَ الفَقْرِ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! Préserve mon corps. Ô Allah ! Préserve mon ouïe. Ô Allah ! Préserve ma vue. Il n’y a aucune divinité [digne d’être adorée] en dehors de Toi. Ô Allah ! Je cherche refuge auprès de Toi contre la mécréance et la pauvreté. Je me mets sous Ta protection contre les tourments de la tombe. Il n’y a aucune divinité [digne d’être adorée] en dehors de Toi. </p>
-            </div>
-             <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللَّهُمَّ عَالِمَ الغَيْبِ وَ الشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَ الأَرْضِ رَبَّ كُلِّ شَيْءٍ وَ مَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَ مِنْ شَرِّ الشَّيْطَانِ وَ شِرْكِهِ، وَ أَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Ô Allah ! Connaisseur de l’invisible et de l’apparent, Créateur des cieux et de la Terre, Seigneur et Possesseur de toute chose, j’atteste qu’il n’y a aucune divinité [digne d’être adorée] en dehors de Toi, je cherche refuge auprès de Toi contre le mal de mon âme, contre le mal de Satan et de son polythéisme et contre le fait de me faire du mal à moi-même ou d’en faire à un musulman </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَمْسَيْنَا وَ أَمْسَى المُلْكُ للهِ رَبِّ العَالَمِينَ، اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذِهِ اللَّيلَةِ، فَتْحَهَا، وَ نَصْرَهَا، وَ نُورَهَا وَ بَرَكَتَهَا، وَ هُدَاهَا، وَ أَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهَا وَ شَرِّ مَا بَعْدَهَا</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Nous voilà au soir et la Royauté appartient à Allah, le Seigneur de l’Univers. Ô Allah ! Je Te demande le bien de cette nuit : ce qu’elle contient comme conquêtes, victoires, lumière, bénédiction et guidée. Je cherche refuge auprès de Toi contre le mal qu’elle contient et le mal qui vient après elle</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">سُبْحَانَ اللهِ وَ بِحَمْدِهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">100x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Gloire, pureté et louange à Allah.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">لاَ إِلَهَ إِلاَّ اللهُ، وَحْدَهُ لاَشَرِيكَ لَهُ، لَهُ المُلْكُ وَ لَهُ الحَمْدُ وَ هُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">100x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Il n’y a aucune divinité [digne d’être adorée] en dehors d’Allah, Seul, sans associé. À Lui la royauté, à Lui la louange, et Il est capable de toute chose </p>
-            </div>
-             <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَسْتَغْفِرُ اللَّهَ الْعَظيمَ الَّذِي لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ القَيّوُمُ وَأَتُوبُ إِلَيهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Je demande pardon à Allah, le Très Grand, Celui en dehors duquel il n’y a aucune divinité digne d’être adorée, Le Vivant, Celui qui subsiste par Lui-même, et je me repens à Lui. </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">100x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Je demande pardon à Allah et je me repens à Lui. </p>
-            </div>
-        </div>
-
+        <div class="px-5 mt-6 flex flex-col gap-4" id="listeSoir"></div>
         <div class="fixed bottom-6 left-0 right-0 flex justify-center">
-            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m2">
-                Commencer
-            </div>
+            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m2">Commencer</div>
         </div>
     </main>
- <!-- ============ ADHKAR DU Nuit============ -->
-        <main id="adhkarsNuit" class="hidden max-w-md mx-auto pb-28">
+
+    <!-- ============ ADHKAR NUIT ============ -->
+    <main id="adhkarsNuit" class="hidden max-w-md mx-auto pb-28">
         <div class="flex items-center justify-between px-5 pt-6">
             <i class="fa-solid fa-angles-left text-xl" style="color: rgb(14, 32, 64);" id="retour3"></i>
             <h2 class="text-2xl font-bold text-blue-900">Adhkar Nuit</h2>
             <i class="fa-solid fa-arrows-up-down-left-right text-blue-900 text-lg" style="color: rgb(14, 32, 64);"></i>
         </div>
-
-        <div class="px-5 mt-6 flex flex-col gap-4">
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">سُبْحَانَ اللهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">33x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Gloire et pureté à Allah</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">الحَمْدُ للهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">33x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">louange à Allah</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اللهُ أَكْبَرُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">34x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Allah est le Plus Grand</p>
-            </div>
-
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">لاَ إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَشَرِيكَ لَهُ، لَهُ المُلْكُ وَ لَهُ الحَمْدُ، وَ هُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، وَ لاَ حَوْلَ وَ لاَ قُوَّةَ إِلاَّ بِاللهِ. سُبْحَانَ اللهِ، وَ الحَمْدُ للهِ، وَ لاَ إِلَهَ إِلاَّ اللهُ، وَ اللهُ أَكْبَرُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Il n’y a aucune divinité [digne d’être adorée] en dehors d’Allah, Seul sans associé. À Lui la royauté et la louange, et Il est capable de toute chose. Il n’y a de force ni de puissance qu’en Allah, gloire et pureté à Allah, louange à Allah, il n’y a aucune divinité [digne d’être adorée] en dehors d’Allah et Allah est le plus Grand</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">للهُ لاَ إِلَهَ إِلاَّ هُوَ الحَيُّ القَيُّومُ لاَ تَأْخُذُهُ سِنَةٌ وَ لاَ نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَ مَا فِي الأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَ مَا خَلْفَهُمْ وَ لاَ يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَ الأَرْضَ وَ لاَ يَئُودُهُ حِفْظُهُمَا وَ هُوَ العَلَيُّ العَظِيمُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Allah ! Point de divinité à part Lui, le Vivant, Celui qui n’a besoin de rien et dont toute chose dépend « al-Qayyûm ». Ni somnolence ni sommeil ne Le saisissent. À Lui appartient tout ce qui est dans les cieux et sur la Terre. Qui peut intercéder auprès de Lui sans Sa permission ? Il connaît leur passé et leur futur. Et, de Sa science, ils n’embrassent que ce qu’Il veut. Son Kursî (Piédestal) déborde les cieux et la Terre et leur garde ne Lui coûte aucune peine. Et Il est le Très Haut, l’Immense.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ هُوَ اللهُ أَحَدٌ ۞ اللهُ الصَّمَدُ ۞ لَمْ يَلِدْ وَلَمْ يُولَدْ ۞ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Il est Allah, Unique ۞ Allah Le Seul à être imploré pour ce que nous désirons ۞ Il n’a jamais engendré et n’a pas été engendré non plus ۞ Et nul n’est égal à Lui. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ مِنْ شَرِّ مَا خَلَقَ ۞ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۞ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۞ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Je cherche protection auprès du Seigneur de l’aube naissante ۞ contre le mal des êtres qu’Il a créés ۞ contre le mal de l’obscurité quand elle s’approfondit ۞ contre le mal de celles qui soufflent (les sorcières) sur les nœuds ۞ et contre le mal de l’envieux quand il envie. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">ُقُلْ أَعُوذُ بِرَبِّ النَّاسِ ۞ مَلِكِ النَّاسِ ۞ إِلَهِ النَّاسِ ۞ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۞ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۞ مِنَ الْجِنَّةِ وَالنَّاسِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">3x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Dis : « Je cherche protection auprès du Seigneur des hommes ۞ Le Souverain des hommes ۞ Dieu des hommes ۞ contre le mal du mauvais conseiller, furtif ۞ qui souffle le mal dans les poitrines des hommes ۞ qu’il (le conseiller) soit un djinn, ou un être humain. »</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">ُبِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَ بِكَ أَرْفَعُهُ، فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَ إِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">C’est en Ton nom, Seigneur que je me couche, et en Ton nom que je me lève. Si Tu retiens mon âme, alors fais-lui miséricorde ; et si Tu la renvoies [dans mon corps], protège-la donc de la manière dont Tu protèges Tes pieux serviteurs. </p>
-            </div>
-
-         
-            
-        </div>
-
+        <div class="px-5 mt-6 flex flex-col gap-4" id="listeNuit"></div>
         <div class="fixed bottom-6 left-0 right-0 flex justify-center">
-            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m3">
-                Commencer
-            </div>
+            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m3">Commencer</div>
         </div>
     </main>
-    <!-- ============ ADHKAR DU Reveil============ -->
-     <main id="adhkarsReveil" class="hidden max-w-md mx-auto pb-28">
+
+    <!-- ============ ADHKAR REVEIL ============ -->
+    <main id="adhkarsReveil" class="hidden max-w-md mx-auto pb-28">
         <div class="flex items-center justify-between px-5 pt-6">
             <i class="fa-solid fa-angles-left text-xl" style="color: rgb(14, 32, 64);" id="retour4"></i>
-            <h2 class="text-2xl font-bold text-blue-900">Adhkar Reveil</h2>
+            <h2 class="text-2xl font-bold text-blue-900">Adhkar Réveil</h2>
             <i class="fa-solid fa-arrows-up-down-left-right text-blue-900 text-lg" style="color: rgb(14, 32, 64);"></i>
         </div>
-
-        <div class="px-5 mt-6 flex flex-col gap-4">
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">اَلحَمدُ لِلهِ الَّذِي أحيَانَا بَعْدَ مَا أمَاتَنَا وَ إِلَيهِ النُّشُورُ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed"> Louange à Allah qui nous a rendus à la vie après nous avoir fait mourir, et tout retourne à Lui.</p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">  Il n’y a d’autre divinité qu’Allâh l’Unique sans associé, à Lui la royauté et à Lui la louange et Il est capable de toute chose. Gloire et pureté à Allâh, la louange est à Allâh et il n’y a de puissance ni de force qu’en Allâh le Très-Haut, le Plus Grand. Ô Seigneur pardonne-moi. </p>
-            </div>
-            <div class="card-tap bg-gray-50 hover:bg-blue-400 p-5 rounded-2xl soft-shadow">
-                <h1 class="arabic font-bold text-blue-900 text-lg">الحَمدُ للهِ الَّذِي عَافَانِي فِي جَسَدِي، وَرَدَّ عَلَيَّ رُوحِي، وَأَذِنَ لِي بِذِكْرِهِ</h1>
-                <div class="inline-block bg-blue-800 text-white font-bold text-sm px-3 py-1 rounded-full mt-3">1x</div>
-                <p class="text-sm text-gray-700 mt-2 leading-relaxed">Louange à Allah qui m’a rendu la vie, m’a préservé dans ma santé et m’a permis de Le mentionner.</p>
-            </div>
-           
-         
-            
-        </div>
-
+        <div class="px-5 mt-6 flex flex-col gap-4" id="listeReveil"></div>
         <div class="fixed bottom-6 left-0 right-0 flex justify-center">
-            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m4">
-                Commencer
-            </div>
+            <div class="bg-blue-900 text-gray-50 font-bold rounded-2xl px-8 py-3 soft-shadow-lg card-tap" id="m4">Commencer</div>
         </div>
     </main>
 
@@ -460,8 +181,8 @@
         <div class="flex items-center justify-between">
             <i class="fa-solid fa-angles-left text-xl" style="color: rgb(2, 32, 83);" id="retour1"></i>
             <div class="flex gap-5">
-                <i class="fa-regular fa-heart text-xl" style="color: rgb(14, 32, 64);"></i>
-                <i class="fa-solid fa-share text-xl" style="color: rgb(14, 32, 64);"></i>
+                <i class="fa-regular fa-heart text-xl" style="color: rgb(14, 32, 64);" id="heartChapelet"></i>
+                <i class="fa-solid fa-share text-xl" style="color: rgb(14, 32, 64);" id="shareChapelet"></i>
             </div>
         </div>
 
@@ -486,6 +207,69 @@
 
             <div class="w-full bg-blue-700 rounded-2xl mt-10 p-5 soft-shadow">
                 <p class="text-sm font-bold text-gray-50 leading-relaxed" id="hadit"></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============ FAVORIS ============ -->
+    <main id="favoris" class="hidden max-w-md mx-auto pb-24 min-h-screen">
+        <div class="flex items-center justify-between px-5 pt-6">
+            <i class="fa-solid fa-angles-left text-xl" style="color: rgb(14, 32, 64);" id="retourFavoris"></i>
+            <h2 class="text-2xl font-bold text-blue-900">Favoris</h2>
+            <i class="fa-solid fa-heart text-xl" style="color: rgb(14, 32, 64);"></i>
+        </div>
+        <div class="px-5 mt-6 flex flex-col gap-4" id="listeFavoris"></div>
+        <p id="favorisVide" class="hidden text-center text-gray-400 mt-14 px-8">
+            Aucun favori pour l'instant. Touche le cœur sur un adhkar pour l'ajouter ici.
+        </p>
+    </main>
+
+    <!-- ============ RECHERCHE ============ -->
+    <main id="recherche" class="hidden max-w-md mx-auto pb-24 min-h-screen">
+        <div class="flex items-center justify-between px-5 pt-6">
+            <i class="fa-solid fa-angles-left text-xl" style="color: rgb(14, 32, 64);" id="retourRecherche"></i>
+            <h2 class="text-2xl font-bold text-blue-900">Recherche</h2>
+            <i class="fa-solid fa-magnifying-glass text-xl" style="color: rgb(14, 32, 64);"></i>
+        </div>
+        <div class="px-5 mt-6">
+            <div class="flex items-center gap-2 bg-gray-100 rounded-2xl px-4 py-3">
+                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                <input id="inputRecherche" type="text" placeholder="Rechercher un adhkar..." class="bg-transparent outline-none w-full text-sm">
+            </div>
+        </div>
+        <div class="px-5 mt-4 flex flex-col gap-4" id="resultatsRecherche"></div>
+        <p id="rechercheVide" class="hidden text-center text-gray-400 mt-10 px-8">Aucun résultat trouvé.</p>
+    </main>
+
+    <!-- ============ PARAMETRES ============ -->
+    <main id="parametres" class="hidden max-w-md mx-auto pb-24 min-h-screen">
+        <div class="flex items-center justify-between px-5 pt-6">
+            <i class="fa-solid fa-angles-left text-xl" style="color: rgb(14, 32, 64);" id="retourParametres"></i>
+            <h2 class="text-2xl font-bold text-blue-900">Paramètres</h2>
+            <i class="fa-solid fa-gear text-xl" style="color: rgb(14, 32, 64);"></i>
+        </div>
+
+        <div class="px-5 mt-6 flex flex-col gap-4">
+            <div class="bg-gray-50 rounded-2xl p-4 soft-shadow">
+                <h3 class="font-bold text-blue-900 mb-3">Taille du texte arabe</h3>
+                <div class="flex gap-2">
+                    <button class="tailleBtn flex-1 py-2 rounded-xl bg-gray-100 font-bold text-sm" data-taille="small">Petit</button>
+                    <button class="tailleBtn flex-1 py-2 rounded-xl bg-gray-100 font-bold text-sm" data-taille="medium">Moyen</button>
+                    <button class="tailleBtn flex-1 py-2 rounded-xl bg-gray-100 font-bold text-sm" data-taille="large">Grand</button>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-4 soft-shadow flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-blue-900">Réinitialiser les favoris</h3>
+                    <p class="text-sm text-gray-500">Supprime tous les adhkars marqués favoris</p>
+                </div>
+                <i class="fa-solid fa-trash text-red-500 text-lg" id="btnResetFavoris"></i>
+            </div>
+
+            <div class="bg-blue-900 rounded-2xl p-4 soft-shadow">
+                <h3 class="font-bold text-white">ADHKAR</h3>
+                <p class="text-blue-100 text-sm mt-1">Version 1.0</p>
             </div>
         </div>
     </main>
